@@ -41,14 +41,24 @@ public class Reservation {
 		return ChronoUnit.DAYS.between(checkIn, checkOut);
 	}
 
-	public void updateDates(LocalDate checkIn, LocalDate checkOut) {
+	public String updateDates(LocalDate checkIn, LocalDate checkOut) {
+		
+		LocalDate dateNow = LocalDate.now();
+		if (checkIn.isBefore(dateNow) || checkOut.isBefore(dateNow)) {
+			return "Reservation dates for updates must be futures dates";
+		} 
+		if (!checkOut.isAfter(checkIn)) {
+			return "Check-out date must be after check-in date";
+		}
+		
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		return null;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Reservation: Room %d, check-in: %s, " + 
+		return String.format("Room %d, check-in: %s, " + 
 				"check-out: %s, %d nights", roomNumber, 
 				checkIn.format(FORMATTER), checkOut.format(FORMATTER),
 				duration());
